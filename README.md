@@ -93,7 +93,7 @@ Target variable encoded as:
 
 2 → No Stress
 
-Preprocessing: Standard Scaling + Label Encoding + PCA (if applied).
+Preprocessing: Standard Scaling + Label Encoding + PCA 
 
 Algorithm used: Support Vector Machine (SVM).
 
