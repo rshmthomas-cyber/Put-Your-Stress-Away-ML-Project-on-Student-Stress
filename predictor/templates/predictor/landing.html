@@ -1,0 +1,337 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>FindMyStress - AI-Powered Wellness</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            overflow-x: hidden;
+        }
+
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 40px 20px;
+        }
+
+        header {
+            text-align: center;
+            margin-bottom: 60px;
+            animation: fadeInDown 1s ease;
+        }
+
+        .logo {
+            display: inline-flex;
+            align-items: center;
+            gap: 15px;
+            margin-bottom: 20px;
+        }
+
+        .logo-icon {
+            width: 60px;
+            height: 60px;
+            background: rgba(255, 255, 255, 0.2);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 32px;
+            backdrop-filter: blur(10px);
+        }
+
+        h1 {
+            font-size: 3.5em;
+            color: white;
+            font-weight: 700;
+            letter-spacing: -1px;
+        }
+
+        .subtitle {
+            font-size: 1.3em;
+            color: rgba(255, 255, 255, 0.9);
+            margin-top: 15px;
+            font-weight: 300;
+        }
+
+        .main-content {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(450px, 1fr));
+            gap: 40px;
+            margin-top: 60px;
+        }
+
+        .option-card {
+            background: rgba(255, 255, 255, 0.15);
+            backdrop-filter: blur(20px);
+            border-radius: 30px;
+            padding: 50px 40px;
+            border: 2px solid rgba(255, 255, 255, 0.2);
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            cursor: pointer;
+            position: relative;
+            overflow: hidden;
+            animation: fadeInUp 1s ease;
+        }
+
+        .option-card:hover {
+            transform: translateY(-10px);
+            background: rgba(255, 255, 255, 0.25);
+            border-color: rgba(255, 255, 255, 0.4);
+            box-shadow: 0 30px 60px rgba(0, 0, 0, 0.3);
+        }
+
+        .option-card::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: radial-gradient(circle, rgba(255, 255, 255, 0.1) 0%, transparent 70%);
+            opacity: 0;
+            transition: opacity 0.4s;
+        }
+
+        .option-card:hover::before {
+            opacity: 1;
+        }
+
+        .card-icon {
+            width: 100px;
+            height: 100px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            border-radius: 25px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 48px;
+            margin: 0 auto 30px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+            transition: transform 0.4s;
+        }
+
+        .option-card:hover .card-icon {
+            transform: scale(1.1) rotate(5deg);
+        }
+
+        .card-title {
+            font-size: 2em;
+            color: white;
+            margin-bottom: 20px;
+            text-align: center;
+            font-weight: 600;
+        }
+
+        .card-description {
+            color: rgba(255, 255, 255, 0.9);
+            font-size: 1.1em;
+            line-height: 1.6;
+            text-align: center;
+            margin-bottom: 30px;
+        }
+
+        .card-features {
+            list-style: none;
+            margin-bottom: 30px;
+        }
+
+        .card-features li {
+            color: rgba(255, 255, 255, 0.85);
+            padding: 12px 0;
+            padding-left: 35px;
+            position: relative;
+            font-size: 1.05em;
+        }
+
+        .card-features li::before {
+            content: '✓';
+            position: absolute;
+            left: 0;
+            color: #4ade80;
+            font-weight: bold;
+            font-size: 1.2em;
+        }
+
+        .cta-button {
+            width: 100%;
+            padding: 18px 40px;
+            background: white;
+            color: #667eea;
+            border: none;
+            border-radius: 15px;
+            font-size: 1.2em;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .cta-button:hover {
+            transform: scale(1.05);
+            box-shadow: 0 10px 30px rgba(255, 255, 255, 0.3);
+        }
+
+        .floating-shapes {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: -1;
+        }
+
+        .shape {
+            position: absolute;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 50%;
+            animation: float 20s infinite ease-in-out;
+        }
+
+        .shape1 {
+            width: 300px;
+            height: 300px;
+            top: 10%;
+            left: 10%;
+            animation-delay: 0s;
+        }
+
+        .shape2 {
+            width: 200px;
+            height: 200px;
+            top: 60%;
+            right: 10%;
+            animation-delay: 5s;
+        }
+
+        .shape3 {
+            width: 150px;
+            height: 150px;
+            bottom: 10%;
+            left: 50%;
+            animation-delay: 10s;
+        }
+
+        @keyframes float {
+            0%, 100% {
+                transform: translateY(0) rotate(0deg);
+            }
+            50% {
+                transform: translateY(-50px) rotate(180deg);
+            }
+        }
+
+        @keyframes fadeInDown {
+            from {
+                opacity: 0;
+                transform: translateY(-50px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(50px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        @media (max-width: 768px) {
+            h1 {
+                font-size: 2.5em;
+            }
+            
+            .main-content {
+                grid-template-columns: 1fr;
+            }
+            
+            .option-card {
+                padding: 40px 30px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="floating-shapes">
+        <div class="shape shape1"></div>
+        <div class="shape shape2"></div>
+        <div class="shape shape3"></div>
+    </div>
+
+    <div class="container">
+        <header>
+            <div class="logo">
+                <div class="logo-icon">🎓</div>
+            </div>
+            <h1>FindMyStress</h1>
+            <p class="subtitle">AI-Powered Stress Assessment & Support</p>
+        </header>
+
+        <div class="main-content">
+            <div class="option-card" onclick="startSurvey()">
+                <div class="card-icon">📋</div>
+                <h2 class="card-title">Comprehensive Assessment</h2>
+                <p class="card-description">
+                    Take our scientifically-designed questionnaire to get a detailed analysis of your stress levels
+                </p>
+                <ul class="card-features">
+                    <li>20+ research-backed questions</li>
+                    <li>Covers health, academics & lifestyle</li>
+                    <li>Detailed stress level prediction</li>
+                    <li>Personalized recommendations</li>
+                </ul>
+                <button class="cta-button">Start Survey</button>
+            </div>
+
+            <div class="option-card" onclick="chatWithStressLess()">
+                <div class="card-icon">💬</div>
+                <h2 class="card-title">Chat with StressLess</h2>
+                <p class="card-description">
+                    Have a conversation with our AI assistant for immediate support and guidance
+                </p>
+                <ul class="card-features">
+                    <li>24/7 AI support assistant</li>
+                    <li>Personalized stress management tips</li>
+                    <li>Real-time conversation</li>
+                    <li>Empathetic and supportive</li>
+                </ul>
+                <button class="cta-button">Chat Now</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        function startSurvey() {
+            window.location.href = '/survey';
+        }
+
+        function chatWithStressLess() {
+            window.location.href = '/chat';
+        }
+
+        // Add smooth scroll reveal animation
+        const cards = document.querySelectorAll('.option-card');
+        cards.forEach((card, index) => {
+            card.style.animationDelay = `${index * 0.2}s`;
+        });
+    </script>
+</body>
+</html>

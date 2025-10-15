@@ -1,0 +1,493 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Student Stress Predictor - ML Powered</title>
+    <link rel="stylesheet" href="{% static 'css/style.css' %}">
+</head>
+<body>
+    <!-- Header -->
+    <header>
+        <h1>🎓 FindMyStress</h1>
+        <p style="color: rgb(44, 37, 37); text-align: center; margin-top: 10px; font-size: 1.1em;">
+            AI-Powered Stress Assessment & Support
+        </p>
+    </header>
+
+    <!-- Main Container -->
+    <div class="container">
+        
+        <!-- Stress Assessment Form -->
+        <div class="stress-form-card">
+            <h2>📋 Comprehensive Stress Assessment</h2>
+            <p>Answer all questions honestly on a scale of 1-5 to get accurate results</p>
+            <p style="color: #666; font-size: 0.9em; margin-top: 5px;">
+                <strong>Scale:</strong> 1 = Not at all | 2 = Rarely | 3 = Sometimes | 4 = Often | 5 = Very often
+            </p>
+
+            <form method="POST" id="stressForm" action="{% url 'predictor:survey' %}">
+    
+                {% csrf_token %}
+                
+                <!-- Section 1: Basic Information -->
+                <div class="section-header">
+                    <h3>👤 Basic Information</h3>
+                </div>
+
+                <div class="form-group">
+                    <label for="gender">Gender:</label>
+                    <select name="gender" id="gender" required>
+                        <option value="Male">Male</option>
+                        <option value="Female">Female</option>
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label for="age">Age:</label>
+                    <input type="number" name="age" id="age" min="15" max="30" value="20" required>
+                </div>
+
+                <!-- Section 2: General Health & Wellbeing -->
+                <div class="section-header">
+                    <h3>💚 General Health & Wellbeing</h3>
+                </div>
+
+                <div class="form-group">
+                    <label for="stress_life">Have you recently experienced stress in your life?</label>
+                    <select name="stress_life" id="stress_life" required>
+                        <option value="1">1 - Not at all</option>
+                        <option value="2">2 - Rarely</option>
+                        <option value="3">3 - Sometimes</option>
+                        <option value="4">4 - Often</option>
+                        <option value="5">5 - Very often</option>
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label for="heartbeat">Have you noticed a rapid heartbeat or palpitations?</label>
+                    <select name="heartbeat" id="heartbeat" required>
+                        <option value="1">1 - Not at all</option>
+                        <option value="2">2 - Rarely</option>
+                        <option value="3">3 - Sometimes</option>
+                        <option value="4">4 - Often</option>
+                        <option value="5">5 - Very often</option>
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label for="anxiety">Have you been dealing with anxiety or tension recently?</label>
+                    <select name="anxiety" id="anxiety" required>
+                        <option value="1">1 - Not at all</option>
+                        <option value="2">2 - Rarely</option>
+                        <option value="3">3 - Sometimes</option>
+                        <option value="4">4 - Often</option>
+                        <option value="5">5 - Very often</option>
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label for="sleep">Do you face any sleep problems or difficulties falling asleep?</label>
+                    <select name="sleep" id="sleep" required>
+                        <option value="1">1 - Not at all</option>
+                        <option value="2">2 - Rarely</option>
+                        <option value="3">3 - Sometimes</option>
+                        <option value="4">4 - Often</option>
+                        <option value="5">5 - Very often</option>
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label for="concentration_general">Are you having difficulty to concentrate?</label>
+                    <select name="concentration_general" id="concentration_general" required>
+                        <option value="1">1 - Not at all</option>
+                        <option value="2">2 - Rarely</option>
+                        <option value="3">3 - Sometimes</option>
+                        <option value="4">4 - Often</option>
+                        <option value="5">5 - Very often</option>
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label for="headaches">Have you been getting headaches more often than usual?</label>
+                    <select name="headaches" id="headaches" required>
+                        <option value="1">1 - Not at all</option>
+                        <option value="2">2 - Rarely</option>
+                        <option value="3">3 - Sometimes</option>
+                        <option value="4">4 - Often</option>
+                        <option value="5">5 - Very often</option>
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label for="irritation">Do you get irritated easily?</label>
+                    <select name="irritation" id="irritation" required>
+                        <option value="1">1 - Not at all</option>
+                        <option value="2">2 - Rarely</option>
+                        <option value="3">3 - Sometimes</option>
+                        <option value="4">4 - Often</option>
+                        <option value="5">5 - Very often</option>
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label for="sadness">Have you been feeling sadness or low mood?</label>
+                    <select name="sadness" id="sadness" required>
+                        <option value="1">1 - Not at all</option>
+                        <option value="2">2 - Rarely</option>
+                        <option value="3">3 - Sometimes</option>
+                        <option value="4">4 - Often</option>
+                        <option value="5">5 - Very often</option>
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label for="illness">Have you been experiencing any illness or health issues?</label>
+                    <select name="illness" id="illness" required>
+                        <option value="1">1 - Not at all</option>
+                        <option value="2">2 - Rarely</option>
+                        <option value="3">3 - Sometimes</option>
+                        <option value="4">4 - Often</option>
+                        <option value="5">5 - Very often</option>
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label for="lonely">Do you often feel lonely or isolated?</label>
+                    <select name="lonely" id="lonely" required>
+                        <option value="1">1 - Not at all</option>
+                        <option value="2">2 - Rarely</option>
+                        <option value="3">3 - Sometimes</option>
+                        <option value="4">4 - Often</option>
+                        <option value="5">5 - Very often</option>
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label for="weight_change">Have you gained or lost weight?</label>
+                    <select name="weight_change" id="weight_change" required>
+                        <option value="1">1 - Not at all</option>
+                        <option value="2">2 - Rarely</option>
+                        <option value="3">3 - Sometimes</option>
+                        <option value="4">4 - Often</option>
+                        <option value="5">5 - Very often</option>
+                    </select>
+                </div>
+
+                <!-- Section 3: Academic Stress -->
+                <div class="section-header">
+                    <h3>📚 Academic Stress</h3>
+                </div>
+
+                <div class="form-group">
+                    <label for="concentration_academic">Do you have trouble concentrating on your academic tasks?</label>
+                    <select name="concentration_academic" id="concentration_academic" required>
+                        <option value="1">1 - Not at all</option>
+                        <option value="2">2 - Rarely</option>
+                        <option value="3">3 - Sometimes</option>
+                        <option value="4">4 - Often</option>
+                        <option value="5">5 - Very often</option>
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label for="workload">Do you feel overwhelmed with your academic workload?</label>
+                    <select name="workload" id="workload" required>
+                        <option value="1">1 - Not at all</option>
+                        <option value="2">2 - Rarely</option>
+                        <option value="3">3 - Sometimes</option>
+                        <option value="4">4 - Often</option>
+                        <option value="5">5 - Very often</option>
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label for="competition">Are you in competition with your peers, and does it affect you?</label>
+                    <select name="competition" id="competition" required>
+                        <option value="1">1 - Not at all</option>
+                        <option value="2">2 - Rarely</option>
+                        <option value="3">3 - Sometimes</option>
+                        <option value="4">4 - Often</option>
+                        <option value="5">5 - Very often</option>
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label for="professor_difficulty">Are you facing any difficulties with your professors or instructors?</label>
+                    <select name="professor_difficulty" id="professor_difficulty" required>
+                        <option value="1">1 - Not at all</option>
+                        <option value="2">2 - Rarely</option>
+                        <option value="3">3 - Sometimes</option>
+                        <option value="4">4 - Often</option>
+                        <option value="5">5 - Very often</option>
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label for="confidence_performance">Do you lack confidence in your academic performance?</label>
+                    <select name="confidence_performance" id="confidence_performance" required>
+                        <option value="1">1 - Not at all</option>
+                        <option value="2">2 - Rarely</option>
+                        <option value="3">3 - Sometimes</option>
+                        <option value="4">4 - Often</option>
+                        <option value="5">5 - Very often</option>
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label for="confidence_subjects">Do you lack confidence in your choice of academic subjects?</label>
+                    <select name="confidence_subjects" id="confidence_subjects" required>
+                        <option value="1">1 - Not at all</option>
+                        <option value="2">2 - Rarely</option>
+                        <option value="3">3 - Sometimes</option>
+                        <option value="4">4 - Often</option>
+                        <option value="5">5 - Very often</option>
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label for="activities_conflict">Are academic and extracurricular activities conflicting for you?</label>
+                    <select name="activities_conflict" id="activities_conflict" required>
+                        <option value="1">1 - Not at all</option>
+                        <option value="2">2 - Rarely</option>
+                        <option value="3">3 - Sometimes</option>
+                        <option value="4">4 - Often</option>
+                        <option value="5">5 - Very often</option>
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label for="class_attendance">Do you attend classes regularly?</label>
+                    <select name="class_attendance" id="class_attendance" required>
+                        <option value="5">5 - Always</option>
+                        <option value="4">4 - Usually</option>
+                        <option value="3">3 - Sometimes</option>
+                        <option value="2">2 - Rarely</option>
+                        <option value="1">1 - Never</option>
+                    </select>
+                </div>
+
+                <!-- Section 4: Environment & Lifestyle -->
+                <div class="section-header">
+                    <h3>🏠 Environment & Lifestyle</h3>
+                </div>
+
+                <div class="form-group">
+                    <label for="relationship">Do you find that your relationships often cause you stress?</label>
+                    <select name="relationship" id="relationship" required>
+                        <option value="1">1 - Not at all</option>
+                        <option value="2">2 - Rarely</option>
+                        <option value="3">3 - Sometimes</option>
+                        <option value="4">4 - Often</option>
+                        <option value="5">5 - Very often</option>
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label for="work_environment">Is your working environment unpleasant or stressful?</label>
+                    <select name="work_environment" id="work_environment" required>
+                        <option value="1">1 - Not at all</option>
+                        <option value="2">2 - Rarely</option>
+                        <option value="3">3 - Sometimes</option>
+                        <option value="4">4 - Often</option>
+                        <option value="5">5 - Very often</option>
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label for="relaxation_time">Do you struggle to find time for relaxation and leisure activities?</label>
+                    <select name="relaxation_time" id="relaxation_time" required>
+                        <option value="1">1 - Not at all</option>
+                        <option value="2">2 - Rarely</option>
+                        <option value="3">3 - Sometimes</option>
+                        <option value="4">4 - Often</option>
+                        <option value="5">5 - Very often</option>
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label for="home_environment">Is your hostel or home environment causing you difficulties?</label>
+                    <select name="home_environment" id="home_environment" required>
+                        <option value="1">1 - Not at all</option>
+                        <option value="2">2 - Rarely</option>
+                        <option value="3">3 - Sometimes</option>
+                        <option value="4">4 - Often</option>
+                        <option value="5">5 - Very often</option>
+                    </select>
+                </div>
+
+                <button type="submit" class="submit-btn">🔮 Predict My Stress Type</button>
+            </form>
+        </div>
+
+        <!-- Results Display -->
+        {% if result %}
+        <div class="results-card">
+            <div class="result-icon">{{ icon }}</div>
+            <h3>Your Stress Assessment Results</h3>
+            
+            <div class="stress-level {{ stress_class }}">
+                {{ stress_type }}
+            </div>
+            
+            <p class="result-description">{{ description }}</p>
+            
+            {% if confidence %}
+            <p class="confidence-score">
+                <strong>Confidence Score:</strong> {{ confidence|floatformat:1 }}%
+            </p>
+            {% endif %}
+            
+            <div class="recommendations-section">
+                <h4>📝 Personalized Recommendations:</h4>
+                <ul class="recommendations-list">
+                    {% for rec in recommendations %}
+                    <li>{{ rec }}</li>
+                    {% endfor %}
+                </ul>
+            </div>
+            
+            <button onclick="scrollToChatbot()" class="chat-cta-btn">
+                💬 Chat with AI Assistant
+            </button>
+        </div>
+        {% endif %}
+
+        {% if error %}
+        <div class="results-card error-card">
+            <h3>⚠️ Error</h3>
+            <p>{{ message }}</p>
+        </div>
+        {% endif %}
+
+        <!-- AI Chatbot Section -->
+        <div class="chat-section" id="chatSection">
+            <h3>💬 AI Stress Support Assistant</h3>
+            <p style="text-align: center; color: #666; margin-bottom: 20px;">
+                Get personalized advice and support based on your stress assessment
+            </p>
+            
+            <div class="chatbot-container">
+                <div class="chat-messages" id="chatMessages">
+                    <div class="message assistant">
+                        <div class="message-content">
+                            {% if result %}
+                                {% if prediction == 0 %}
+                                Hi! I see you're experiencing distress. I'm here to help you with coping strategies and support. What would you like to talk about?
+                                {% elif prediction == 1 %}
+                                Hello! It's great that you have positive stress! I can help you maintain this momentum while preventing burnout. How can I assist you?
+                                {% else %}
+                                Hi! You're doing well with minimal stress. I can help you maintain this balance and build resilience. What would you like to know?
+                                {% endif %}
+                            {% else %}
+                                Hello! I'm your AI stress management assistant. Complete the assessment above to get personalized support, or ask me anything about stress management!
+                            {% endif %}
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="chat-input-area">
+                    <input type="text" id="chatInput" placeholder="Type your message here..." onkeypress="handleKeyPress(event)">
+                    <button onclick="sendMessage()">Send</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Scroll to Top Button -->
+    <button class="scroll-top" id="scrollTopBtn" onclick="scrollToTop()">↑</button>
+
+    <script>
+        let stressType = {% if result %}{{ prediction }}{% else %}null{% endif %};
+        
+        async function sendMessage() {
+            const input = document.getElementById('chatInput');
+            const message = input.value.trim();
+            if (!message) return;
+            
+            addMessage(message, 'user');
+            input.value = '';
+            const loadingId = addLoadingMessage();
+            
+            try {
+                const response = await fetch('/chatbot/', {
+                    method: 'POST',
+                    headers: {'Content-Type': 'application/json'},
+                    body: JSON.stringify({message: message, stress_type: stressType})
+                });
+                const data = await response.json();
+                removeLoadingMessage(loadingId);
+                
+                if (data.success) {
+                    addMessage(data.response, 'assistant');
+                } else {
+                    addMessage('Sorry, I encountered an error. Please try again.', 'assistant');
+                }
+            } catch (error) {
+                removeLoadingMessage(loadingId);
+                addMessage('Sorry, I could not connect. Please try again.', 'assistant');
+            }
+        }
+        
+        function addMessage(text, sender) {
+            const messagesDiv = document.getElementById('chatMessages');
+            const messageDiv = document.createElement('div');
+            messageDiv.className = `message ${sender}`;
+            const contentDiv = document.createElement('div');
+            contentDiv.className = 'message-content';
+            contentDiv.textContent = text;
+            messageDiv.appendChild(contentDiv);
+            messagesDiv.appendChild(messageDiv);
+            messagesDiv.scrollTop = messagesDiv.scrollHeight;
+        }
+        
+        function addLoadingMessage() {
+            const messagesDiv = document.getElementById('chatMessages');
+            const messageDiv = document.createElement('div');
+            messageDiv.className = 'message assistant';
+            messageDiv.id = 'loading-message';
+            const contentDiv = document.createElement('div');
+            contentDiv.className = 'message-content';
+            contentDiv.innerHTML = '<div class="loading"></div>';
+            messageDiv.appendChild(contentDiv);
+            messagesDiv.appendChild(messageDiv);
+            messagesDiv.scrollTop = messagesDiv.scrollHeight;
+            return 'loading-message';
+        }
+        
+        function removeLoadingMessage(id) {
+            const loadingMsg = document.getElementById(id);
+            if (loadingMsg) loadingMsg.remove();
+        }
+        
+        function handleKeyPress(event) {
+            if (event.key === 'Enter') sendMessage();
+        }
+        
+        function scrollToChatbot() {
+            document.getElementById('chatSection').scrollIntoView({behavior: 'smooth'});
+            document.getElementById('chatInput').focus();
+        }
+        
+        window.onscroll = function() {
+            const btn = document.getElementById('scrollTopBtn');
+            if (document.body.scrollTop > 300 || document.documentElement.scrollTop > 300) {
+                btn.classList.add('visible');
+            } else {
+                btn.classList.remove('visible');
+            }
+        };
+        
+        function scrollToTop() {
+            window.scrollTo({top: 0, behavior: 'smooth'});
+        }
+
+        document.getElementById('stressForm').addEventListener('submit', function(e) {
+            const btn = this.querySelector('.submit-btn');
+            btn.innerHTML = '⏳ Processing...';
+            btn.disabled = true;
+        });
+    </script>
+</body>
+</html>

@@ -1,0 +1,126 @@
+{% extends 'predictor/base.html' %}
+{% block content %}
+<div class="row justify-content-center">
+  <div class="col-md-8">
+    <div class="card shadow-sm mb-4">
+      <div class="card-body">
+        <h2 class="card-title mb-1">Student Stress Self-check</h2>
+        <p class="text-muted">Answer the questions honestly — we'll classify your stress type and show actionable next steps.</p>
+
+        <form method="post" class="mt-3">
+          {% csrf_token %}
+          <div class="row">
+            <div class="col-md-6">
+              {{ form.gender.label_tag }} {{ form.gender }}
+            </div>
+            <div class="col-md-6">
+              {{ form.age.label_tag }} {{ form.age }}
+            </div>
+          </div>
+
+          <!-- Show the rest of the form fields (stacked) -->
+          <div class="mt-3">
+            {{ form.stress_recent.label_tag }} {{ form.stress_recent }}<br>
+            {{ form.rapid_heartbeat.label_tag }} {{ form.rapid_heartbeat }}<br>
+            {{ form.anxiety.label_tag }} {{ form.anxiety }}<br>
+            {{ form.sleep_problems.label_tag }} {{ form.sleep_problems }}<br>
+            {{ form.difficulty_concentrate.label_tag }} {{ form.difficulty_concentrate }}<br>
+            {{ form.headaches.label_tag }} {{ form.headaches }}<br>
+            {{ form.irritated.label_tag }} {{ form.irritated }}<br>
+            {{ form.trouble_academic_concentration.label_tag }} {{ form.trouble_academic_concentration }}<br>
+            {{ form.sadness_low_mood.label_tag }} {{ form.sadness_low_mood }}<br>
+            {{ form.illness_health_issues.label_tag }} {{ form.illness_health_issues }}<br>
+            {{ form.lonely_isolated.label_tag }} {{ form.lonely_isolated }}<br>
+            {{ form.overwhelmed_workload.label_tag }} {{ form.overwhelmed_workload }}<br>
+            {{ form.competition_peers.label_tag }} {{ form.competition_peers }}<br>
+            {{ form.relationship_stress.label_tag }} {{ form.relationship_stress }}<br>
+            {{ form.difficulties_with_professors.label_tag }} {{ form.difficulties_with_professors }}<br>
+            {{ form.unpleasant_work_environment.label_tag }} {{ form.unpleasant_work_environment }}<br>
+            {{ form.no_time_relaxation.label_tag }} {{ form.no_time_relaxation }}<br>
+            {{ form.hostel_home_difficulties.label_tag }} {{ form.hostel_home_difficulties }}<br>
+            {{ form.lack_confidence_performance.label_tag }} {{ form.lack_confidence_performance }}<br>
+            {{ form.lack_confidence_subject_choice.label_tag }} {{ form.lack_confidence_subject_choice }}<br>
+            {{ form.conflict_academic_extracurricular.label_tag }} {{ form.conflict_academic_extracurricular }}<br>
+            {{ form.attend_classes_regularly.label_tag }} {{ form.attend_classes_regularly }}<br>
+            {{ form.gained_lost_weight.label_tag }} {{ form.gained_lost_weight }}<br>
+          </div>
+
+          <div class="mt-4 d-flex gap-2">
+            <button type="submit" class="btn btn-primary">Predict</button>
+            <a class="btn btn-outline-secondary" href="{% url 'predictor:predict' %}">Reset</a>
+          </div>
+        </form>
+      </div>
+    </div>
+
+    <!-- Prediction result card -->
+    {% if result %}
+      <div class="card mb-3 border-0 shadow-sm">
+        <div class="card-body">
+          <div class="d-flex justify-content-between align-items-start">
+            <div>
+              <h4 class="fw-bold">
+                {% if result == 'Distress (Negative Stress)' %}
+                  <span class="badge bg-danger me-2">Distress</span>
+                  Distress — let's support you
+                {% elif result == 'Eustress (Positive Stress)' %}
+                  <span class="badge bg-success me-2">Eustress</span>
+                  Eustress — harness this energy
+                {% else %}
+                  <span class="badge bg-primary me-2">No Stress</span>
+                  No Stress — great state!
+                {% endif %}
+              </h4>
+
+              {% if probability %}
+                <p class="mb-0 text-muted">Confidence: {{ probability }}%</p>
+              {% endif %}
+              {% if level_result %}
+                <p class="mb-0 mt-2"><strong>Stress Level:</strong> {{ level_result }}</p>
+              {% endif %}
+            </div>
+
+            <div class="text-end">
+              <a href="{% url 'predictor:chat_page' %}" class="btn btn-outline-dark">Open Chat Helper</a>
+            </div>
+          </div>
+
+          <hr>
+
+          <!-- Suggestions area (tuned per result) -->
+          <div class="mt-2">
+            {% if result == 'Distress (Negative Stress)' %}
+              <h6>Immediate suggestions</h6>
+              <ul>
+                <li>Try a quick grounding exercise: name 5 things you can see, 4 you can touch.</li>
+                <li>Do a 3–4 minute breathing exercise (box breathing).</li>
+                <li>Take a short walk and drink water.</li>
+              </ul>
+              <p class="mb-0 text-muted">If you feel overwhelmed or unsafe, please contact local emergency services or campus counseling.</p>
+
+            {% elif result == 'Eustress (Positive Stress)' %}
+              <h6>How to channel this energy</h6>
+              <ul>
+                <li>Break tasks into milestones and reward yourself after each one.</li>
+                <li>Use Pomodoro (25/5) to keep momentum without burnout.</li>
+                <li>Balance activity with short relaxation—walk or breathing breaks.</li>
+              </ul>
+              <p class="mb-0 text-muted">Want action steps? Click <em>Open Chat Helper</em> for personalized tips.</p>
+
+            {% else %}
+              <h6>Great — use this time to grow</h6>
+              <ul>
+                <li>Reflect on short-term goals for this week.</li>
+                <li>Set one measurable learning or project goal (SMART format).</li>
+                <li>Consider exploring new hobbies or volunteer work.</li>
+              </ul>
+              <p class="mb-0 text-muted">If you want, open the chat to set a specific goal now.</p>
+            {% endif %}
+          </div>
+        </div>
+      </div>
+    {% endif %}
+
+  </div>
+</div>
+{% endblock %}
